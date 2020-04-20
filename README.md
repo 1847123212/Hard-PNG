@@ -10,8 +10,8 @@ Hard-PNG
 
 
 # 特点
-* 支持宽度不大于 4000 像素的 PNG 图片，对图片高度没有限制。
-* **支持多种颜色类型**: 灰度、灰度+透明、RGB、索引RGB、RGBA。
+* 支持宽度不大于 4000 像素的 png 图片，对图片高度没有限制。
+* **支持所有的 PNG 颜色类型**: 灰度、灰度+透明、RGB、索引RGB、RGBA。
 * 仅支持 8bit 深度 (大多数 PNG 图片都是 8bit 深度)。
 * 流式输入、流式输出。
 * 完全使用 SystemVerilog 实现，方便移植和仿真。
@@ -81,7 +81,7 @@ RTL 代码全在 [**png_decoder.sv**](https://github.com/WangXuan95/Hard-PNG/blo
 
 仿真前，请将 [**tb_png_decoder.sv**](https://github.com/WangXuan95/Hard-PNG/blob/master/tb_png_decoder.sv) 中的 **PNG_FILE** 宏名改为 **.png** 文件的地址，将 **OUT_FILE** 宏名改为要输出的 **.txt** 文件的地址。然后运行仿真。仿真的时间取决于 **.png** 文件的大小，当 **ivalid** 信号由高变低时，仿真完成。然后你可以从 **.txt** 文件中查看解码结果。
 
-我们在 [**images文件夹**](https://github.com/WangXuan95/Hard-PNG/blob/master/images) 中提供了 13 个 **.png** 文件，它们尺寸各异，且有灰度、RGB、RGBA、索引RGB等不同的颜色类型，你可以用它们进行仿真。
+我们在 [**images文件夹**](https://github.com/WangXuan95/Hard-PNG/blob/master/images) 中提供了 13 个 **.png** 文件，它们尺寸各异，且有灰度、RGB、索引RGB、RGBA等不同的颜色类型，你可以用它们进行仿真。
 
 以 [**test3.png**](https://github.com/WangXuan95/Hard-PNG/blob/master/images/test3.png) 为例，我们得到的 **.txt** 文件如下：
 ```
@@ -103,14 +103,14 @@ python validation.py
 * **测试平台**: **Hard-PNG** 运行 RTL 仿真，时钟频率 100MHz
 * **对比平台**: Intel Core I7 8750H 运行 [**upng**](https://github.com/elanthis/upng) 库（MSVC++ 编译器 17.00.50727  -O3优化）
 
-测试结果如下表，Hard-PNG的解码的性能略低于8750H。可以估计，Hard-PNG 的性能好于单片机和大部分ARM嵌入式处理器
+测试结果如下表，Hard-PNG的解码的性能略低于对比平台。可以估计，Hard-PNG 的性能好于单片机和大部分ARM嵌入式处理器
 
 | **图片文件名** | **图片类型** | **图片大小** | **Hard-PNG耗时** | **对比平台耗时** | **Hard-PNG吞吐率** |
 | :-----:        | :----------: | :--------:   | :-------------:  | :--------:   | :--------:   |
 | test9.png      | RGB          | 631x742      | 110 ms           | 75 ms        | 4.26 Mpixel/s |
-| test10.png     | RGB(索引RGB)  | 631x742      | 25 ms            | 不支持       | 18.73 Mpixel/s |
+| test10.png     | 索引RGB      | 631x742      | 25 ms            | 不支持       | 18.73 Mpixel/s |
 | test11.png     | RGBA         | 1920x1080    | 527 ms           | 348 ms       | 3.93 Mpixel/s |
-| test12.png     | RGB(索引RGB)  | 1920x1080    | 105 ms           | 不支持       | 19.75 Mpixel/s |
+| test12.png     | 索引RGB      | 1920x1080    | 105 ms           | 不支持       | 19.75 Mpixel/s |
 
 
 
@@ -130,5 +130,5 @@ python validation.py
 我们感谢以下链接为我们提供参考：
 
 * [**upng**](https://github.com/elanthis/upng): 一个轻量化的 C 语言 png 解码库
-* [**TinyPNG**](https://tinypng.com/): 一个利用索引RGB原理对 png 图片进行压缩的工具
+* [**TinyPNG**](https://tinypng.com/): 一个利用索引RGB对 png 图片进行压缩的工具
 * [**PNG Specification**](https://www.w3.org/TR/REC-png.pdf): png 标准手册
