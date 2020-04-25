@@ -43,7 +43,7 @@ Hard-PNG
 | **图2** : **png_decoder** 接口图 |
 
 它的使用方法很简单，首先需要给 **clk** 信号提供时钟(频率不限)，并将 **rst** 信号置低，解除模块复位。
-然后将**原始码流**从**"PNG文件码流输入接口"**输入，就可以从**"图象基本信息输出接口"**和**"像素输出接口"**中得到解压结果。
+然后将**原始码流**从**PNG文件码流输入接口** 输入，就可以从**图象基本信息输出接口**和**像素输出接口**中得到解压结果。
 
 以[**test1.png**](https://github.com/WangXuan95/Hard-PNG/blob/master/images/test1.png)为例，我们应该以**图3**的时序把**原始码流**（98个字节）输入**png_decoder**中。
 该输入接口类似 **AXI-stream** ，其中 **ivalid=1** 时说明外部想发送一个字节给 **png_decoder**。**iready=1** 时说明 **png_decoder** 已经准备好接收一个字节。只有 **ivalid** 和 **iready** 同时 **=1** 时，**ibyte** 才被成功的输入 **png_decoder** 中。
@@ -68,9 +68,9 @@ Hard-PNG
 
 # 仿真
 
-[**tb_png_decoder.sv**](https://github.com/WangXuan95/Hard-PNG/blob/master/tb_png_decoder.sv) 是仿真的顶层，它从指定的**.png**文件中读取**原始码流**输入[**png_decoder**](https://github.com/WangXuan95/Hard-PNG/blob/master/png_decoder.sv)中，再接收**解压后的像素**并写入一个 **.txt** 文件。
+[**tb_png_decoder.sv**](https://github.com/WangXuan95/Hard-PNG/blob/master/tb_png_decoder.sv) 是仿真的顶层，它从指定的 **.png** 文件中读取**原始码流**输入[**png_decoder**](https://github.com/WangXuan95/Hard-PNG/blob/master/png_decoder.sv)中，再接收**解压后的像素**并写入一个 **.txt** 文件。
 
-仿真前，请将 [**tb_png_decoder.sv**](https://github.com/WangXuan95/Hard-PNG/blob/master/tb_png_decoder.sv) 中的**PNG_FILE宏名**改为**.png**文件的路径，将**OUT_FILE宏名**改为**.txt**文件的路径。然后运行仿真。**.png**文件越大，仿真的时间越长。当**ivalid**信号出现下降沿时，仿真完成。然后你可以从**.txt**文件中查看解压结果。
+仿真前，请将 [**tb_png_decoder.sv**](https://github.com/WangXuan95/Hard-PNG/blob/master/tb_png_decoder.sv) 中的**PNG_FILE宏名**改为 **.png** 文件的路径，将**OUT_FILE宏名**改为 **.txt** 文件的路径。然后运行仿真。 **.png** 文件越大，仿真的时间越长。当**ivalid**信号出现下降沿时，仿真完成。然后你可以从 **.txt** 文件中查看解压结果。
 
 我们在 [**images文件夹**](https://github.com/WangXuan95/Hard-PNG/blob/master/images) 下提供了多个 **.png** 文件，它们尺寸各异，且有不同的颜色类型，你可以用它们进行仿真。以 [**test3.png**](https://github.com/WangXuan95/Hard-PNG/blob/master/images/test3.png) 为例，仿真得到的 **.txt** 文件如下：
 ```
@@ -85,7 +85,7 @@ f4d8c3ff f4d8c3ff f4d8c3ff f4d8c3ff f4d8c3ff f4d9c3ff ......
 ```
 python validation.py
 ```
-若验证通过，则打印 **"validation successful!!"** 。目前我们测试了几十张不同的**.png**图片，均验证通过。
+若验证通过，则打印 **"validation successful!!"** 。目前我们测试了几十张不同的 **.png** 图片，均验证通过。
 
 # 性能测试
 
