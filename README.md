@@ -94,16 +94,15 @@ python validation.py
 
 测试结果如下表，**Hard-PNG**的性能接近对比平台。由此可以推断，**Hard-PNG**的性能好于大部分**ARM嵌入式处理器**。
 
-| **png文件名**    | **png文件大小** | **颜色类型** | **图片尺寸** | **对比平台耗时** | **Hard-PNG 耗时** | **输入吞吐率** | **输出吞吐率** |
-| :-----:          | :------------:  | :----------: | :--------:   | :-------------:  | :--------:       | :--------:     | :--------:     |
-| test9.png        | 1029494 字节    | RGB          | 631x742      | 83 ms            | 101.8 ms         | 10.1 MByte/s   | 4.6 Mpixel/s   |
-| test10.png       | 193489 字节     | 索引RGB      | 631x742      | 不支持           | 23.8 ms          | 8.1 MByte/s    | 19.7 Mpixel/s  |
-| test11.png       | 4734865 字节    | RGBA         | 1920x1080    | 402 ms           | 497.1 ms         | 9.5 MByte/s    | 4.2 Mpixel/s   |
-| test12.png       | 818885 字节     | 索引RGB      | 1920x1080    | 不支持           | 101.7 ms         | 8.1 MByte/s    | 20.4 Mpixel/s  |
-| test13.png       | 3311470 字节    | RGB          | 1819x1011    | 321 ms           | 327.7 ms         | 10.1 MByte/s   | 5.6 Mpixel/s   |
-| test14.png       | 1156159 字节    | 黑白         | 1819x1011    | 135 ms           | 113.4 ms         | 10.2 MByte/s   | 16.2 Mpixel/s  |
-| blockdiagram.png | 14398 字节      | 索引RGB      | 1383x202     | 不支持           | 4.2 ms           | 3.4 MByte/s    | 66.2 Mpixel/s  |
-| wave2.png        | 35525 字节      | 索引RGB      | 1427x691     | 不支持           | 13.7 ms          | 2.6 MByte/s    | 72.0 Mpixel/s  |
+| **png文件名**    | **颜色类型** | **图象尺寸** | **对比平台耗时** | **Hard-PNG 耗时** | **输入吞吐率** | **输出吞吐率** |
+| :-----:          | :----------: | :--------:   | :-------------:  | :--------:       | :--------:     | :--------:     |
+| test9.png        | RGB          | 631x742      | 83 ms            | 101.8 ms         | 10.1 MByte/s   | 4.6 Mpixel/s   |
+| test10.png       | 索引RGB      | 631x742      | 不支持           | 23.8 ms          | 8.1 MByte/s    | 19.7 Mpixel/s  |
+| test11.png       | RGBA         | 1920x1080    | 402 ms           | 497.1 ms         | 9.5 MByte/s    | 4.2 Mpixel/s   |
+| test12.png       | 索引RGB      | 1920x1080    | 不支持           | 101.7 ms         | 8.1 MByte/s    | 20.4 Mpixel/s  |
+| test13.png       | RGB          | 1819x1011    | 321 ms           | 327.7 ms         | 10.1 MByte/s   | 5.6 Mpixel/s   |
+| test14.png       | 黑白         | 1819x1011    | 135 ms           | 113.4 ms         | 10.2 MByte/s   | 16.2 Mpixel/s  |
+| wave2.png        | 索引RGB      | 1427x691     | 不支持           | 13.7 ms          | 2.6 MByte/s    | 72.0 Mpixel/s  |
 
 
 # FPGA 资源消耗
