@@ -1,7 +1,7 @@
 `timescale 1 ns/1 ns
 
-`define PNG_FILE "E:/FPGAcommon/Hard-PNG/images/test2.png"   // the png file to decode
-`define OUT_FILE "E:/FPGAcommon/Hard-PNG/result/test2.txt"   // decode result txt file
+`define PNG_FILE "E:/FPGAcommon/Hard-PNG/images/test14.png"   // the png file to decode
+`define OUT_FILE "E:/FPGAcommon/Hard-PNG/result/test14.txt"   // decode result txt file
 `define OUT_ENABLE 1                                          // whether to write result to the decode result txt file
 
 module tb_png_decoder();
@@ -42,10 +42,12 @@ initial begin
         @(posedge clk) #1
         ivalid <= 1'b1;
         ibyte  <= rbyte;
-        #1 if(iready) rbyte = $fgetc(fppng);
-        //@(posedge clk) #1
-        //ivalid <= 1'b0;
-        //ibyte  <= '0;
+        #1 if(iready) begin
+            rbyte = $fgetc(fppng);
+            //@(posedge clk) #1
+            //ivalid <= 1'b0;
+            //ibyte  <= '0;
+        end
     end
     
     @(posedge clk) #1

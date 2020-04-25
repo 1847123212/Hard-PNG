@@ -1309,8 +1309,6 @@ endmodule
 
 
 
-
-
 module huffman_build #(
     parameter NUMCODES = 288,
     parameter CODEBITS = 5,
@@ -1341,14 +1339,15 @@ wire [           CODEBITS -1:0]   wrdata;
 wire                              run;
 wire                              done;
 wire [clogb2(2*NUMCODES-1)-1:0]   rdaddr;
-wire [            OUTWIDTH  :0]   rddata2;
-wire [            OUTWIDTH-1:0]   rddata = rddata2[OUTWIDTH-1:0];
+wire [            OUTWIDTH-1:0]   rddata;
 
 reg  [clogb2(NUMCODES)-1:0] blcount  [BITLENGTH];
 reg  [                31:0] nextcode [BITLENGTH+1];
 
+reg  clear_tree2d = 1'b0;
 reg  build_tree2d = 1'b0;
 reg  [clogb2(BITLENGTH)-1:0] idx = '0;
+reg  [clogb2(2*NUMCODES+1)-1:0] clearidx = '0;
 reg  [ clogb2(NUMCODES)-1:0] nn='0, nnn, lnn='0;
 reg  [CODEBITS-1:0] ii='0, lii='0;
 reg  [CODEBITS-1:0] blenn, blen = '0;
@@ -1360,7 +1359,6 @@ wire [clogb2(2*NUMCODES-1)  :0] ntpos= {ntreepos, tree1d[ii]};
 reg  [clogb2(2*NUMCODES-1)  :0] tpos = 0;
 wire        rdfilled;
 reg         valid = 1'b0;
-wire [OUTWIDTH-1:0] rdtree2d;
 wire [OUTWIDTH-1:0] wrtree2d = (lii==0) ? lnn : nodefilled + NUMCODES;
 reg  alldone = 1'b0;
 
@@ -1403,7 +1401,13 @@ always @ (posedge clk) begin
     nextcode[0] <= 0;
     alldone <= 1'b0;
     if(run) begin
-        if(build_tree2d) begin
+        if(~clear_tree2d) begin
+            if(clearidx<(2*NUMCODES)) begin
+                clearidx <= clearidx + 1;
+            end else begin
+                clear_tree2d <= 1'b1;
+            end
+        end else if(build_tree2d) begin
             if(nn<NUMCODES) begin
                 if(islast) begin
                     ii <= blenn - 1;
@@ -1426,6 +1430,8 @@ always @ (posedge clk) begin
         ii <= '0;
         idx <= '0;
         build_tree2d <= 1'b0;
+        clearidx <= '0;
+        clear_tree2d <= 1'b0;
     end
 end
 
@@ -1434,7 +1440,7 @@ always_comb
         ntreepos <= 0;
     else if(valid) begin
         if(~rdfilled)
-            ntreepos <= rdtree2d - NUMCODES;
+            ntreepos <= rddata - NUMCODES;
         else
             ntreepos <= (lii==0) ? 0 : nodefilled;
     end else
@@ -1458,26 +1464,29 @@ RamSinglePort #(
     .rdata    ( blenn       )
 );
 
-RamDualPort #(
-    .SIZE     ( NUMCODES * 2                ),
-    .WIDTH    ( OUTWIDTH + 1                )
+RamSinglePort #(
+    .SIZE     ( NUMCODES * 2              ),
+    .WIDTH    ( OUTWIDTH + 1              )
 ) ram_for_tree2d (
-    .clk      ( clk                         ),
-    .wen      ( wren | (valid & rdfilled)   ),
-    .waddr    ( wren ? wraddr : tpos        ),
-    .wdata    ( wren ? 
+    .clk      ( clk                       ),
+    .wen      ( clearidx<(2*NUMCODES)   | 
+                (valid & rdfilled)        ),
+    .waddr    ( clearidx<(2*NUMCODES)   ? 
+                clearidx                : 
+                tpos                      ),
+    .wdata    ( clearidx<(2*NUMCODES)   ? 
                 {1'b1,{OUTWIDTH{1'b0}}} : 
-                {1'b0, wrtree2d}            ),
-    .wen2     ( wren                        ),
-    .waddr2   ( wraddr + NUMCODES           ),
-    .wdata2   ( {1'b1,{OUTWIDTH{1'b0}}}     ),
-    .raddr    ( ntpos                       ),
-    .rdata    ( {rdfilled,rdtree2d}         ),
-    .raddr2   ( rdaddr                      ),
-    .rdata2   ( rddata2                     )
+                {1'b0, wrtree2d}          ),
+    .raddr    ( alldone                 ?
+                rdaddr                  :
+                ntpos                     ),
+    .rdata    ( {rdfilled, rddata}        )
 );
 
 endmodule
+
+
+
 
 
 
@@ -1936,82 +1945,3 @@ always @ (posedge clk)
     rdata <= mem[raddr];
 
 endmodule
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-module RamDualPort #(
-    parameter  SIZE     = 1024,
-    parameter  WIDTH    = 32
-)(
-    clk,
-    wen,
-    waddr,
-    wdata,
-    wen2,
-    waddr2,
-    wdata2,
-    raddr,
-    rdata,
-    raddr2,
-    rdata2
-);
-
-input  clk;
-input  wen , waddr , wdata;
-input  wen2, waddr2, wdata2;
-input  raddr;
-output rdata;
-input  raddr2;
-output rdata2;
-
-function automatic integer clogb2(input integer val);
-    for(clogb2=0; val>0; clogb2=clogb2+1) val = val>>1;
-endfunction
-
-wire  clk;
-wire  wen;
-wire  [clogb2(SIZE-1)-1:0] waddr;
-wire  [WIDTH-1:0] wdata;
-wire  wen2;
-wire  [clogb2(SIZE-1)-1:0] waddr2;
-wire  [WIDTH-1:0] wdata2;
-wire  [clogb2(SIZE-1)-1:0] raddr;
-reg   [WIDTH-1:0] rdata;
-wire  [clogb2(SIZE-1)-1:0] raddr2;
-reg   [WIDTH-1:0] rdata2;
-
-reg [WIDTH-1:0] mem [SIZE];
-
-initial rdata = '0;
-initial rdata2 = '0;
-
-always @ (posedge clk) begin
-    rdata <= mem[raddr];
-    rdata2 <= mem[raddr2];
-    if(wen)
-        mem[waddr] <= wdata;
-    if(wen2)
-        mem[waddr2] <= wdata2;
-end
-
-endmodule
-
-
