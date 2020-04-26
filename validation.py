@@ -1,5 +1,5 @@
-PNG_FILE = "E:/FPGAcommon/Hard-PNG/images/test14.png"
-TXT_FILE = "E:/FPGAcommon/Hard-PNG/result/test14.txt"
+PNG_FILE = "E:/FPGAcommon/Hard-PNG/images/test13.png"
+TXT_FILE = "E:/FPGAcommon/Hard-PNG/result/test13.txt"
 
 import numpy as np
 from PIL import Image
